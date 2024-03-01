@@ -29,9 +29,9 @@ async function main() {
   await mongoose.connect(mongoDB);
   console.log("Debug: Should be connected?");
   await createCategories();
-  await createPedidos();
-  await createProducts();
   await createUsers();
+  await createProducts();
+  await createPedidos();
   console.log("Debug: Closing mongoose");
   mongoose.connection.close();
 }
@@ -61,9 +61,9 @@ async function productCreate(index, name, category, summary, price, stock) {
     category: category,
     price: price,
   };
-  if (stock != false) pedidodetail.stock = stock;
+  if (stock != false) productdetail.stock = stock;
 
-  const product = new Product(pedidodetail);
+  const product = new Product(productdetail);
   await product.save();
   products[index] = product;
   console.log(`Added pedido: ${name} ${index}`);
@@ -113,7 +113,7 @@ async function createProducts() {
     productCreate(
       3,
       "Colegio La academia",
-      categories[3],
+      categories[2],
       "lorem ipsum",
       12.5,
       false
@@ -121,7 +121,7 @@ async function createProducts() {
     productCreate(
       4,
       "Colegio Abel Bravo",
-      categories[3],
+      categories[1],
       "lorem ipsum",
       19.5,
       20
