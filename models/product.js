@@ -10,7 +10,7 @@ const productSchema = new Schema({
 });
 
 productSchema.virtual("url").get(function () {
-  return `/catalogo/productos/${this._id}`;
+  return `/catalog/products/${this._id}`;
 });
 
 module.exports = mongoose.model("Product", productSchema);
