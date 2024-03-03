@@ -3,8 +3,10 @@ const Pedido = require("../models/pedido");
 
 //Muestra lista de todos los pedidos en base a filtros
 exports.pedido_list = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar listado de pedidos segun filtros");
+  const allPedidos = await Pedido.find()
+    .populate("product")
+    .sort({ orderPlaced: -1 });
+  res.render("pedido_list", { title: "Lista de pedidos", allPedidos });
 });
 
 //Muestra detalles de un pedido
