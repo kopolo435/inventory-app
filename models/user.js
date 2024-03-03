@@ -9,7 +9,7 @@ const userSchema = new Schema({
 });
 
 userSchema.virtual("url").get(function () {
-  return `/accounts/user/${this._id}`;
+  return `/management/user/${this._id}`;
 });
 
 userSchema.virtual("fullname").get(function () {

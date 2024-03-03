@@ -55,6 +55,6 @@ router.get("/user/:id/delete", user_controller.user_update_get);
 router.post("/user/:id/delete", user_controller.user_update_post);
 
 //GET request to show user details
-router.get("/user/:id");
+router.get("/user/:id", user_controller.user_details);
 
 module.exports = router;
