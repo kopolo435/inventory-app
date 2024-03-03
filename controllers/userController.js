@@ -3,8 +3,9 @@ const User = require("../models/user");
 
 //Muestra lista de usuarios
 exports.user_list = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar mostrar lista de usuarios");
+  const allUsers = await User.find().sort({ last_name: -1 }).exec();
+
+  res.render("user_list", { title: "Lista de usuarios", allUsers });
 });
 
 //Muestra detalles de usuarios
