@@ -3,7 +3,6 @@ const Category = require("../models/category");
 
 //Se encarga de mostrar la lista de categorias almacenadas
 exports.category_list = asyncHandler(async (req, res, next) => {
-  //TODO implementar fetch de lista de categorias
   const categories = await Category.find().sort({ name: 1 }).exec();
   res.render("category_list", {
     title: "Categorias disponibles",
@@ -13,8 +12,18 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 
 //Se encarga de mostrar la informacion detallada de una categoria
 exports.category_detail = asyncHandler(async (req, res, next) => {
-  //TODO implementar fetch de informacion de una categoria
-  res.send("Sin implementar detalles de categoria");
+  const category = await Category.findById(req.params.id).exec();
+  if (category === null) {
+    //No results
+    const err = new Error("Categoria no encontrada");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("category_detail", {
+    title: "Detalles de Categoria",
+    category: category,
+  });
 });
 
 //Se encarga de mostrar el form para crear una categoria
