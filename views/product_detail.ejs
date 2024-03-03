@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("head_layout",{title}) %>
+  <body>
+    <h1>Detalles de <%= product.name %></h1>
+    <p><%= product.summary %></p>
+    <p>Precio por unidad de $<%= product.price %></p>
+    <p>En inventario <%= product.stock %> disponibles</p>
+    <p>Categoria: <%= product.category %></p>
+  </body>
+</html>

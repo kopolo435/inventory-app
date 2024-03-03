@@ -58,6 +58,6 @@ router.get("/product/:id/delete", product_controller.product_delete_get);
 router.post("/product/:id/delete", product_controller.product_delete_post);
 
 //GET reques to show details of a product
-router.get("/product/:id");
+router.get("/product/:id", product_controller.product_detail);
 
 module.exports = router;

@@ -12,8 +12,19 @@ exports.product_list = asyncHandler(async (req, res, next) => {
 
 //Muesta detalles de un producto
 exports.product_detail = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar mostrar detalles de producto");
+  const product = await Product.findById(req.params.id).exec();
+
+  if (product === null) {
+    //No result
+    const err = new Error("Producto no encontrado");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("product_detail", {
+    title: "Detalles de producto",
+    product,
+  });
 });
 
 //Muestra form para crear un nuevo producto
