@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("head_layout",{title}) %>
+  <body>
+    <h1><%= title %></h1>
+    <p>Lista de productos:</p>
+    <ul>
+      <% allProducts.forEach(product => { %>
+      <li>
+        <a href="<%= product.url %>"><%= product.name%></a>
+        <p><%= product.summary %></p>
+        <p><%= product.category %></p>
+      </li>
+      <% }) %>
+    </ul>
+  </body>
+</html>
