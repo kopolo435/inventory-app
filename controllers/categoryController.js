@@ -4,7 +4,11 @@ const Category = require("../models/category");
 //Se encarga de mostrar la lista de categorias almacenadas
 exports.category_list = asyncHandler(async (req, res, next) => {
   //TODO implementar fetch de lista de categorias
-  res.send("Sin implementar lista de categorias");
+  const categories = await Category.find().sort({ name: 1 }).exec();
+  res.render("category_list", {
+    title: "Categorias disponibles",
+    categories: categories,
+  });
 });
 
 //Se encarga de mostrar la informacion detallada de una categoria

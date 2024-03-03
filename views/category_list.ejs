@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('head_layout', {title: title}); %>
+  <body>
+    <h1><%= title %></h1>
+
+    <div class="categoriesContainer">
+      <ul>
+        <% categories.forEach(category => { %>
+        <li><a href="<%= category.url %>"><%= category.name %></a></li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>
