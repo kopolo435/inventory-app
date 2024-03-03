@@ -31,8 +31,8 @@ router.get("/category/:id/delete", category_controller.category_delete_get);
 //POST request to delete a category
 router.post("/category/:id/delete", category_controller.category_delete_post);
 
-//Post request to show details of a category
-router.post("/category/id", category_controller.category_detail);
+//GET request to show details of a category
+router.get("/category/:id", category_controller.category_detail);
 
 //Product Routes
 
