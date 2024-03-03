@@ -29,7 +29,7 @@ router.get("/order/:id/delete", pedido_controller.pedido_delete_get);
 router.post("/order/:id/delete", pedido_controller.pedido_delete_post);
 
 //GET request to show pedido details
-router.get("/order/:id");
+router.get("/order/:id", pedido_controller.pedido_details);
 
 //User routes
 

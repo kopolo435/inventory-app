@@ -11,8 +11,18 @@ exports.pedido_list = asyncHandler(async (req, res, next) => {
 
 //Muestra detalles de un pedido
 exports.pedido_details = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar mostart detalles de un pedido");
+  const pedido = await Pedido.findById(req.params.id)
+    .populate("product")
+    .populate("user")
+    .exec();
+
+  if (pedido === null) {
+    //No results
+    const err = new Error("Pedido no encontrado");
+    err.status = 404;
+    return next(err);
+  }
+  res.render("pedido_details", { title: "Detalles de pedido", pedido });
 });
 
 //Maneja solicitud get para crear un pedido

@@ -9,7 +9,7 @@ const pedidoSchema = new Schema({
 });
 
 pedidoSchema.virtual("url").get(function () {
-  return `/management/pedidos/${this._id}`;
+  return `/management/order/${this._id}`;
 });
 
 module.exports = mongoose.model("Pedido", pedidoSchema);

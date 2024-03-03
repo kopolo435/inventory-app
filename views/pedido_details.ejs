@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("head_layout") %>
+  <body>
+    <h1>Pedido <%= pedido._id %></h1>
+    <p>Detalles:</p>
+    <p>
+      Producto:
+      <a href="<%= pedido.product.url %>"><%= pedido.product.name %></a>
+    </p>
+    <p>Unidades solicitadas: <%= pedido.ammount %></p>
+    <p>Solicitado el: <%= pedido.orderPlaced %></p>
+    <p>Usuario: <%= pedido.user.fullname %></p>
+  </body>
+</html>
