@@ -10,6 +10,17 @@ const catalogRouter = require("./routes/catalog");
 const managementRouter = require("./routes/management");
 var app = express();
 
+//DB connection
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+const mongoDB =
+  "mongodb+srv://samirfanilla:sanjudas435@myatlasclusteredu.pagxys9.mongodb.net/inventory_app_dev?retryWrites=true&w=majority&appName=myAtlasClusterEDU";
+
+main().catch((err) => console.log(err));
+async function main() {
+  await mongoose.connect(mongoDB);
+}
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
