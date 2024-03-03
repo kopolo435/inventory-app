@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.router();
+const router = express.Router();
 
 //Require controllers
 const pedido_controller = require("../controllers/pedidoController");
@@ -49,10 +49,12 @@ router.get("/user/:id/update", user_controller.user_update_get);
 router.post("/user/:id/update", user_controller.user_update_post);
 
 //GET request to delete a user
-router.get("user/:id/delete", user_controller.user_update_get);
+router.get("/user/:id/delete", user_controller.user_update_get);
 
 //POST request to delete a user
-router.post("user/:id/delete", user_controller.user_update_post);
+router.post("/user/:id/delete", user_controller.user_update_post);
 
 //GET request to show user details
-router.get("user/:id");
+router.get("/user/:id");
+
+module.exports = router;

@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express.router();
+const router = express.Router();
 
 //Inializacion de controllers
 const product_controller = require("../controllers/productController");
@@ -10,6 +10,8 @@ const category_controller = require("../controllers/categoryController");
 // GET catalog homepage
 
 router.get("/", category_controller.category_list);
+
+router.get("/categories", category_controller.category_list);
 
 //GET request for creating a category. This route must come before routes that display category (uses :id)
 router.get("/category/create", category_controller.category_create_get);
@@ -57,3 +59,5 @@ router.post("/product/:id/delete", product_controller.product_delete_post);
 
 //GET reques to show details of a product
 router.post("/product/:id");
+
+module.exports = router;
