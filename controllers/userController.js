@@ -95,15 +95,73 @@ exports.user_create_post = [
 
 //Maneja solicitud get para actualizar usuario
 exports.user_update_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar mostar form para actualizr usuarios");
+  const user = await User.findById(req.params.id).exec();
+  if (user === null) {
+    const err = new Error("No se encontro el usuario");
+    err.status = 404;
+    return next(err);
+  }
+  //Se inicializa errors como vacio para inicializar variable en view
+  res.render("user_form", { title: "Actualizar usuario", user, errors: {} });
 });
 
 //Maneja solicitud post para actualizar usuario
-exports.user_update_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud post para actualizar usuario");
-});
+exports.user_update_post = [
+  body("first_name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el nombre del usuario")
+    .escape(),
+  body("last_name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el apellido")
+    .escape(),
+  body("cellphone")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el numero de celular")
+    .isMobilePhone()
+    .withMessage("Debe ingresar un numero valido")
+    .escape(),
+  body("email")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar un email")
+    .isEmail()
+    .withMessage("Debe introducir un correo electronico valido"),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const user = new User({
+      _id: req.params.id,
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      cellphone: req.body.cellphone,
+      email: req.body.email,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("user_form", {
+        title: "Crear usuario",
+        user,
+        errors: errors.mapped(),
+      });
+    } else {
+      const userExists = await User.findOne({
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+      }).exec();
+      if (userExists) {
+        res.redirect(userExists.url);
+      } else {
+        await User.findByIdAndUpdate(req.params.id, user, {});
+        res.redirect(user.url);
+      }
+    }
+  }),
+];
 
 //Maneja solicitud get para eliminar usuario
 exports.user_delete_get = asyncHandler(async (req, res, next) => {
