@@ -37,10 +37,10 @@ router.get("/order/:id", pedido_controller.pedido_details);
 router.get("/users", user_controller.user_list);
 
 //GET request to create a user
-router.get("/users", user_controller.user_create_get);
+router.get("/user/create", user_controller.user_create_get);
 
 //POST request to create a user
-router.post("/users", user_controller.user_create_post);
+router.post("/user/create", user_controller.user_create_post);
 
 //GET request to update a user
 router.get("/user/:id/update", user_controller.user_update_get);

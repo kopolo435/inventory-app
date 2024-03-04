@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const { body, validationResult, matchedData } = require("express-validator");
 const User = require("../models/user");
 const Pedido = require("../models/pedido");
 
@@ -32,15 +33,65 @@ exports.user_details = asyncHandler(async (req, res, next) => {
 
 //Muestra form para crear usuarios en solicitud get
 exports.user_create_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar mostrar form para crear usuarios");
+  res.render("user_form", { title: "Crear usuario", user: {}, errors: {} });
 });
 
 //Maneja solicitud post para crear usuario
-exports.user_create_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud post para crear usuarios");
-});
+exports.user_create_post = [
+  body("first_name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el nombre del usuario")
+    .escape(),
+  body("last_name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el apellido")
+    .escape(),
+  body("cellphone")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el numero de celular")
+    .isMobilePhone()
+    .withMessage("Debe ingresar un numero valido")
+    .escape(),
+  body("email")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar un email")
+    .isEmail()
+    .withMessage("Debe introducir un correo electronico valido"),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const user = new User({
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      cellphone: req.body.cellphone,
+      email: req.body.email,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("user_form", {
+        title: "Crear usuario",
+        user,
+        errors: errors.mapped(),
+      });
+    } else {
+      const userExists = await User.findOne({
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+      }).exec();
+      if (userExists) {
+        res.redirect(userExists.url);
+      } else {
+        await user.save();
+        res.redirect(user.url);
+      }
+    }
+  }),
+];
 
 //Maneja solicitud get para actualizar usuario
 exports.user_update_get = asyncHandler(async (req, res, next) => {

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("head_layout",{title}) %>
+  <body>
+    <h1><%= title %></h1>
+    <form action="" method="post">
+      <div class="textInput">
+        <label for="fist_name">
+          Nombre <input type="text" id="first_name" name="first_name" value="<%=
+          typeof user !== "undefined" ? user.first_name :"" %>"
+          placeholder="Nombre" minlength="1">
+        </label>
+        <% if (typeof errors.first_name !== "undefined") { %>
+        <p class="errorText"><%= errors.first_name.msg %></p>
+        <% } %>
+      </div>
+      <div class="textInput">
+        <label for="last_name">
+          Apellido <input type="text" id="last_name" name="last_name" value="<%=
+          typeof user !== "undefined" ? user.last_name :"" %>"
+          placeholder="Apellido" minlength="1">
+        </label>
+        <% if (typeof errors.last_name !== "undefined") { %>
+        <p class="errorText"><%= errors.last_name.msg %></p>
+        <% } %>
+      </div>
+      <div class="textInput">
+        <label for="cellphone">
+          Celular <input type="text" id="cellphone" name="cellphone" value="<%=
+          typeof user !== "undefined" ? user.cellphone :"" %>"
+          placeholder="1234-5678" minlength="1">
+        </label>
+        <% if (typeof errors.cellphone !== "undefined") { %>
+        <p class="errorText"><%= errors.cellphone.msg %></p>
+        <% } %>
+      </div>
+      <div class="textInput">
+        <label for="email">
+          Correo Electronico <input type="text" id="email" name="email"
+          value="<%= typeof user !== "undefined" ? user.email :"" %>"
+          placeholder="nombre@gmail.com" minlength="1">
+        </label>
+        <% if (typeof errors.email !== "undefined") { %>
+        <p class="errorText"><%= errors.email.msg %></p>
+        <% } %>
+      </div>
+      <button type="submit">Guardar</button>
+    </form>
+  </body>
+</html>
