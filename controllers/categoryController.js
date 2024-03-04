@@ -77,15 +77,45 @@ exports.category_create_post = [
 
 //Se encarga de mostrar el formulario indicado para actualizar una categoria
 exports.category_update_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar form para actualiza categoria");
+  const category = await Category.findById(req.params.id).exec();
+  res.render("category_form", {
+    title: "Actualizar categoria",
+    category: category,
+  });
 });
 
 //Se encarga de manejar la solicitud de actualizar una categoria
-exports.category_update_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de actualizacion de categoria ");
-});
+exports.category_update_post = [
+  body("name", "El nombre debe tener al menos 3 letras")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const category = new Category({
+      _id: req.params.id,
+      name: req.body.name,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        title: "Actualizar Categoria",
+        errors: errors.mapped(),
+        category,
+      });
+    } else {
+      const categoryExists = await Category.findOne({ name: req.body.name });
+      if (categoryExists) {
+        res.redirect(categoryExists.url);
+      } else {
+        await Category.findByIdAndUpdate(req.params.id, category, {});
+        res.redirect(category.url);
+      }
+    }
+  }),
+];
 
 //Se encarga de mostrar datos de categoria al intentar borrarla
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
