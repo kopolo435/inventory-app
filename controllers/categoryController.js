@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Category = require("../models/category");
+const Product = require("../models/product");
 
 //Se encarga de mostrar la lista de categorias almacenadas
 exports.category_list = asyncHandler(async (req, res, next) => {
@@ -12,7 +13,10 @@ exports.category_list = asyncHandler(async (req, res, next) => {
 
 //Se encarga de mostrar la informacion detallada de una categoria
 exports.category_detail = asyncHandler(async (req, res, next) => {
-  const category = await Category.findById(req.params.id).exec();
+  const [category, categoryProducts] = await Promise.all([
+    Category.findById(req.params.id).exec(),
+    Product.find({ category: req.params.id }).sort({ name: 1 }).exec(),
+  ]);
   if (category === null) {
     //No results
     const err = new Error("Categoria no encontrada");
@@ -23,6 +27,7 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
   res.render("category_detail", {
     title: "Detalles de Categoria",
     category: category,
+    categoryProducts,
   });
 });
 

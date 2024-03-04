@@ -3,7 +3,9 @@ const Product = require("../models/product");
 
 //Muestra lista de productos filtrados segun parametros
 exports.product_list = asyncHandler(async (req, res, next) => {
-  const allProducts = await Product.find().sort({ name: 1 });
+  const allProducts = await Product.find()
+    .populate("category")
+    .sort({ name: 1 });
   res.render("product_list", {
     title: "Lista de productos",
     allProducts: allProducts,
