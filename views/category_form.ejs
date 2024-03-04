@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("head_layout") %>
+  <body>
+    <h1><%= title %></h1>
+    <form method="post">
+      <div class="textInput">
+        <label for="name">
+          Nombre <% if (typeof category !== "undefined") { %>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            minlength="3"
+            value="<%= category.name %>"
+            placeholder="Camisas"
+          />
+          <% }else{ %>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            placeholder="Camisas"
+            minlength="3"
+          />
+          <% } %>
+        </label>
+        <% if (typeof errors !== "undefined" ) { %>
+        <p class="errorText"><%= errors.name.msg %></p>
+        <% } %>
+      </div>
+      <button type="submit">Guardar</button>
+    </form>
+  </body>
+</html>

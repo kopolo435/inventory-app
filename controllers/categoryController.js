@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const { body, validationResult } = require("express-validator");
 const Category = require("../models/category");
 const Product = require("../models/product");
 
@@ -33,15 +34,46 @@ exports.category_detail = asyncHandler(async (req, res, next) => {
 
 //Se encarga de mostrar el form para crear una categoria
 exports.category_create_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar form para crear categoria");
+  res.render("category_form", { title: "Crear Categoria" });
 });
 
 //Se encarga de manejar la solicitud de creacion de una categoria
-exports.category_create_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de creacion de categoria");
-});
+exports.category_create_post = [
+  body("name", "El nombre de la categoria debe tener al menos 3 letras")
+    .trim()
+    .isLength({ min: 3 })
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const category = new Category({
+      name: req.body.name,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        title: "Crear Categoria",
+        category: category,
+        errors: errors.mapped(),
+      });
+    } else {
+      // Data from form is valid.
+      // Check if Genre with same name already exists.
+      const categoryExists = await Category.findOne({ name: req.body.name })
+        .collation({ locale: "en", strength: 2 })
+        .exec();
+      if (categoryExists) {
+        // Genre exists, redirect to its detail page.
+        res.redirect(categoryExists.url);
+      } else {
+        await category.save();
+        // New genre saved. Redirect to genre detail page.
+        res.redirect(category.url);
+      }
+    }
+  }),
+];
 
 //Se encarga de mostrar el formulario indicado para actualizar una categoria
 exports.category_update_get = asyncHandler(async (req, res, next) => {
