@@ -43,7 +43,7 @@ router.get("/products/", product_controller.product_list);
 router.get("/product/create", product_controller.product_create_get);
 
 //POST request to create a product
-router.get("/product/create", product_controller.product_create_post);
+router.post("/product/create", product_controller.product_create_post);
 
 //GET request to update a product
 router.get("/product/:id/update", product_controller.product_update_get);

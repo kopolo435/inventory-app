@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const { body, validationResult, matchedData } = require("express-validator");
 const Product = require("../models/product");
 const Category = require("../models/category");
 
@@ -16,11 +17,6 @@ exports.product_list = asyncHandler(async (req, res, next) => {
     Category.find().sort({ name: 1 }).exec(),
   ]);
 
-  // const [allProducts, categories] = await Promise.all([
-  //   Product.find().populate("category").sort({ name: 1 }),
-  //   Category.find().sort({ name: 1 }).exec(),
-  // ]);
-
   res.render("product_list", {
     title: "Lista de productos",
     allProducts: allProducts,
@@ -30,7 +26,9 @@ exports.product_list = asyncHandler(async (req, res, next) => {
 
 //Muesta detalles de un producto
 exports.product_detail = asyncHandler(async (req, res, next) => {
-  const product = await Product.findById(req.params.id).exec();
+  const product = await Product.findById(req.params.id)
+    .populate("category")
+    .exec();
 
   if (product === null) {
     //No result
@@ -47,13 +45,69 @@ exports.product_detail = asyncHandler(async (req, res, next) => {
 
 //Muestra form para crear un nuevo producto
 exports.product_create_get = asyncHandler(async (req, res, next) => {
-  res.send("Sin implementar mostrar form de crear producto");
+  const categories = await Category.find().sort({ name: 1 }).exec();
+  res.render("product_form", { title: "Crear producto", categories });
 });
 
 //Maneja solicitud post de creacion de un producto
-exports.product_create_post = asyncHandler(async (req, res, next) => {
-  res.send("Sin implementar manejo de solicitud post de crear producto");
-});
+exports.product_create_post = [
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Debe introducir el nombre del producto"),
+
+  body("summary").trim().escape().optional({ values: "falsy" }),
+  body("category").escape(),
+  body("price")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Debe introducir un precio")
+    .isFloat({ min: 0 })
+    .withMessage("Debe introducir un valor mayor a 0"),
+
+  body("stock")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Debe introducir la cantidad en inventario")
+    .isInt({ min: 0 }),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const data = matchedData(req);
+
+    const product = new Product({
+      name: req.body.name,
+      summary: req.body.summary,
+      category: req.body.category,
+      price: req.body.price,
+      stock: req.body.stock,
+    });
+
+    if (!errors.isEmpty()) {
+      const categories = await Category.find().sort({ name: 1 }).exec();
+      res.render("product_form", {
+        title: "Crear producto",
+        errors: errors.mapped(),
+        product,
+        categories,
+      });
+    } else {
+      const productExists = await Product.findOne({
+        name: product.name,
+      }).exec();
+
+      if (productExists) {
+        res.redirect(productExists.url);
+      } else {
+        await product.save();
+        res.redirect(product.url);
+      }
+    }
+  }),
+];
 
 //Maneja solicitud get de actualizar producto
 exports.product_update_get = asyncHandler(async (req, res, next) => {
