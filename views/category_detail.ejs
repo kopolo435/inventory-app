@@ -3,5 +3,14 @@
   <%- include("head_layout",{title:title}) %>
   <body>
     <h1><%= category.name %></h1>
+    <h2>Productos en esta categoria</h2>
+    <ul>
+      <% categoryProducts.forEach(product => { %>
+      <li>
+        <a href="<%= product.url %>"><%= product.name%></a>
+        <p><%= product.summary %></p>
+      </li>
+      <% }) %>
+    </ul>
   </body>
 </html>
