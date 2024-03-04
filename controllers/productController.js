@@ -1,14 +1,30 @@
 const asyncHandler = require("express-async-handler");
 const Product = require("../models/product");
+const Category = require("../models/category");
 
 //Muestra lista de productos filtrados segun parametros
 exports.product_list = asyncHandler(async (req, res, next) => {
-  const allProducts = await Product.find()
-    .populate("category")
-    .sort({ name: 1 });
+  const categoryFilters = req.query.categoriesFilter;
+  // Constructing the query dynamically based on category filters
+  let productQuery = Product.find();
+  if (categoryFilters && categoryFilters.length > 0) {
+    productQuery = productQuery.where("category").in(categoryFilters);
+  }
+
+  const [allProducts, categories] = await Promise.all([
+    productQuery.populate("category").sort({ name: 1 }),
+    Category.find().sort({ name: 1 }).exec(),
+  ]);
+
+  // const [allProducts, categories] = await Promise.all([
+  //   Product.find().populate("category").sort({ name: 1 }),
+  //   Category.find().sort({ name: 1 }).exec(),
+  // ]);
+
   res.render("product_list", {
     title: "Lista de productos",
     allProducts: allProducts,
+    categories,
   });
 });
 

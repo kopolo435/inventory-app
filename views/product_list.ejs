@@ -3,6 +3,19 @@
   <%- include("head_layout",{title}) %>
   <body>
     <h1><%= title %></h1>
+    <form action="" method="get">
+      <% categories.forEach(category => { %>
+      <label for="<%= category.name %>">
+        <%= category.name %>
+        <input
+          type="checkbox"
+          name="categoriesFilter[]"
+          value="<%= category._id %>"
+        />
+      </label>
+      <% }) %>
+      <button type="submit">Filtrar</button>
+    </form>
     <p>Lista de productos:</p>
     <ul>
       <% allProducts.forEach(product => { %>
