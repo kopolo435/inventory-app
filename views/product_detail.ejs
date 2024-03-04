@@ -7,5 +7,9 @@
     <p>Precio por unidad de $<%= product.price %></p>
     <p>En inventario <%= product.stock %> disponibles</p>
     <p>Categoria: <%= product.category.name %></p>
+    <div class="options">
+      <a href="<%= product.url %>/update">Actualizar Producto</a>
+      <a href="<%= product.url %>/delete">Eliminar Producto</a>
+    </div>
   </body>
 </html>

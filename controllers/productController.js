@@ -76,7 +76,6 @@ exports.product_create_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
-    const data = matchedData(req);
 
     const product = new Product({
       name: req.body.name,
@@ -111,13 +110,83 @@ exports.product_create_post = [
 
 //Maneja solicitud get de actualizar producto
 exports.product_update_get = asyncHandler(async (req, res, next) => {
-  res.send("Sin implementar manejo de solicitud get de actualizar producto");
+  const [product, categories] = await Promise.all([
+    Product.findById(req.params.id).exec(),
+    Category.find().sort({ name: 1 }).exec(),
+  ]);
+
+  if (product === null) {
+    const err = new Error("No se encontro el producto");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("product_form", {
+    title: "Actualizar producto",
+    product,
+    categories,
+  });
 });
 
 //Maneja solicitud post de actualizar producto
-exports.product_update_post = asyncHandler(async (req, res, next) => {
-  res.send("Sin implementar manejo de solicitud post de actualizar producto");
-});
+exports.product_update_post = [
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Debe introducir el nombre del producto"),
+
+  body("summary").trim().escape().optional({ values: "falsy" }),
+  body("category").escape(),
+  body("price")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Debe introducir un precio")
+    .isFloat({ min: 0 })
+    .withMessage("Debe introducir un valor mayor a 0"),
+
+  body("stock")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Debe introducir la cantidad en inventario")
+    .isInt({ min: 0 }),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const product = new Product({
+      _id: req.params.id,
+      name: req.body.name,
+      summary: req.body.summary,
+      category: req.body.category,
+      price: req.body.price,
+      stock: req.body.stock,
+    });
+
+    if (!errors.isEmpty()) {
+      const categories = await Category.find().sort({ name: 1 }).exec();
+      res.render("product_form", {
+        title: "Actualizar producto",
+        errors: errors.mapped(),
+        product,
+        categories,
+      });
+    } else {
+      const productExists = await Product.findOne({
+        name: product.name,
+      }).exec();
+
+      if (productExists) {
+        res.redirect(productExists.url);
+      } else {
+        await Product.findByIdAndUpdate(req.params.id, product, {});
+        res.redirect(product.url);
+      }
+    }
+  }),
+];
 
 //Maneja solicitud get de eliminar producto
 exports.product_delete_get = asyncHandler(async (req, res, next) => {
