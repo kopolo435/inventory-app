@@ -2,14 +2,13 @@
 <html lang="en">
   <%- include("head_layout") %>
   <body>
-    <h1>Pedido <%= pedido._id %></h1>
-    <p>Detalles:</p>
+    <h1>Detalles de pedido: <%= pedido._id %></h1>
     <p>
       Producto:
       <a href="<%= pedido.product.url %>"><%= pedido.product.name %></a>
     </p>
     <p>Unidades solicitadas: <%= pedido.ammount %></p>
-    <p>Solicitado el: <%= pedido.orderPlaced %></p>
+    <p>Solicitado el <%= pedido.formattedDate %></p>
     <p>Usuario: <%= pedido.user.fullname %></p>
   </body>
 </html>

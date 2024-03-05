@@ -8,6 +8,9 @@
     <p>En inventario <%= product.stock %> disponibles</p>
     <p>Categoria: <%= product.category.name %></p>
     <div class="options">
+      <a href="/management/order/<%= product._id %>/create"
+        >Crear pedido de producto</a
+      >
       <a href="<%= product.url %>/update">Actualizar Producto</a>
       <a href="<%= product.url %>/delete">Eliminar Producto</a>
     </div>

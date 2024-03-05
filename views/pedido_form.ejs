@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include("head_layout",{title}) %>
+  <body>
+    <h1><%= title %></h1>
+    <form action="" method="post">
+      <div class="selectInput">
+        <label for="user">
+          Usuario
+          <select name="user" id="user">
+            <% users.forEach(user => { %> <% if (typeof pedido.user !==
+            "undefined" && user._id.toString() === pedido.user._id.toString()) {
+            %>
+            <option value="<%= user._id %>" selected>
+              <%= user.fullname %>
+            </option>
+            <% }else{ %>
+            <option value="<%= user._id %>"><%= user.fullname %></option>
+            <% } %> <% }); %>
+          </select>
+        </label>
+      </div>
+      <div class="textInput">
+        <label for="ammount">
+          Cantidad: <input type="number" name="ammount" id="ammount" value="<%=
+          typeof user !== "undefined" ? user.ammount : "" %>" placeholder="0"
+          min="1" step="1" />
+        </label>
+        <% if (typeof errors.ammount !== "undefined") { %>
+        <p class="errorText"><%=errors.ammount.msg%></p>
+        <% } %>
+        <div class="dateInput">
+          <label for="orderPlaced">
+            Fecha de pedido <input type="date" name="orderPlaced"
+            id="orderPlaced" value="<%= typeof pedido !== "undefined" ?
+            pedido.inputDate : "" %>" />
+          </label>
+          <% if (typeof errors.orderPlaced !== "undefined") { %>
+          <p class="errorText"><%=errors.orderPlaced.msg%></p>
+          <% } %>
+        </div>
+      </div>
+      <button type="submit">Guardar</button>
+    </form>
+  </body>
+</html>

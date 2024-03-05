@@ -11,10 +11,10 @@ const user_controller = require("../controllers/userController");
 router.get("/orders", pedido_controller.pedido_list);
 
 //GET request to create a pedido
-router.get("/order/create", pedido_controller.pedido_create_get);
+router.get("/order/:id/create", pedido_controller.pedido_create_get);
 
 //POST request to create pedido
-router.post("/order/create", pedido_controller.pedido_create_post);
+router.post("/order/:id/create", pedido_controller.pedido_create_post);
 
 //GET request to update a pedido
 router.get("/order/:id/update", pedido_controller.pedido_update_get);
