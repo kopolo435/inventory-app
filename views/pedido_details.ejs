@@ -11,4 +11,8 @@
     <p>Solicitado el <%= pedido.formattedDate %></p>
     <p>Usuario: <%= pedido.user.fullname %></p>
   </body>
+  <div class="options">
+    <a href="<%= pedido.url %>/update">Actualizar Pedido</a>
+    <a href="<%= pedido.url %>/delete">Eliminar Pedido</a>
+  </div>
 </html>

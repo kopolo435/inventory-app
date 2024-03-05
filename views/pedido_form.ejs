@@ -3,7 +3,13 @@
   <%- include("head_layout",{title}) %>
   <body>
     <h1><%= title %></h1>
+    <p>
+      Producto: <%= typeof product !== "undefined" ? product.name :
+      pedido.product.name %>
+    </p>
     <form action="" method="post">
+      <input type="hidden" name="productId" value="<%= typeof product !==
+      "undefined" ? product._id : pedido.product._id %>" />
       <div class="selectInput">
         <label for="user">
           Usuario
@@ -23,8 +29,8 @@
       <div class="textInput">
         <label for="ammount">
           Cantidad: <input type="number" name="ammount" id="ammount" value="<%=
-          typeof user !== "undefined" ? user.ammount : "" %>" placeholder="0"
-          min="1" step="1" />
+          typeof pedido !== "undefined" ? pedido.ammount : "" %>"
+          placeholder="0" min="1" step="1" />
         </label>
         <% if (typeof errors.ammount !== "undefined") { %>
         <p class="errorText"><%=errors.ammount.msg%></p>

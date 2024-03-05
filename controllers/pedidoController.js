@@ -60,24 +60,20 @@ exports.pedido_create_post = [
     const validationErrors = validationResult(req);
 
     const pedido = new Pedido({
-      product: req.params.id,
+      product: req.body.productId,
       user: req.body.user,
       ammount: req.body.ammount,
       orderPlaced: req.body.orderPlaced,
     });
 
     if (!validationErrors.isEmpty()) {
-      const [allUsers, product] = await Promise.all([
-        User.find().sort({ last_name: 1 }).exec(),
-        Product.findById(req.params.id).exec(),
-      ]);
-      const test = validationErrors.mapped();
+      const allUsers = await User.find().sort({ last_name: 1 }).exec();
+      await Pedido.populate(pedido, "product");
       res.render("pedido_form", {
         title: "Crear pedido",
         users: allUsers,
         pedido,
         errors: validationErrors.mapped(),
-        product,
       });
     } else {
       await pedido.save();
@@ -88,15 +84,64 @@ exports.pedido_create_post = [
 
 //Maneja solicitud get para actualizar pedido
 exports.pedido_update_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud get para actualizar pedido");
+  const [pedido, allUsers] = await Promise.all([
+    Pedido.findById(req.params.id).populate("product").exec(),
+    User.find().sort({ last_name: 1 }).exec(),
+  ]);
+
+  if (pedido === null) {
+    const err = new Error("No se encontro el pedido");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("pedido_form", {
+    title: "Actualizar pedido",
+    pedido,
+    users: allUsers,
+    errors: {},
+  });
 });
 
 //Maneja solicitud post para actualizar pedido
-exports.pedido_update_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud post para actualizar pedido");
-});
+exports.pedido_update_post = [
+  body("user").escape(),
+  body("ammount")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar la cantidad")
+    .isInt({ min: 1 })
+    .withMessage("Debe introducir una cantidad mayor a 0")
+    .escape(),
+  body("orderPlaced", "Fecha invalida").isISO8601().toDate(),
+
+  asyncHandler(async (req, res, next) => {
+    const validationErrors = validationResult(req);
+
+    const newPedido = new Pedido({
+      _id: req.params.id,
+      product: req.body.pedidoId,
+      user: req.body.user,
+      ammount: req.body.ammount,
+      orderPlaced: req.body.orderPlaced,
+    });
+
+    if (!validationErrors.isEmpty()) {
+      const [allUsers] = await Promise.all([
+        User.find().sort({ last_name: 1 }).exec(),
+      ]);
+      res.render("pedido_form", {
+        title: "Crear pedido",
+        users: allUsers,
+        newPedido,
+        errors: validationErrors.mapped(),
+      });
+    } else {
+      await Pedido.findByIdAndUpdate(req.params.id, newPedido, {});
+      res.redirect(newPedido.url);
+    }
+  }),
+];
 
 //Maneja solicitud get para eliminar pedido
 exports.pedido_delete_get = asyncHandler(async (req, res, next) => {
