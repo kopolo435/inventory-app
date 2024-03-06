@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const Category = require("../models/category");
 const Product = require("../models/product");
+const Pedido = require("../models/pedido");
+const Admin = require("../models/admin");
 
 //Se encarga de mostrar la lista de categorias almacenadas
 exports.category_list = asyncHandler(async (req, res, next) => {
@@ -119,12 +121,80 @@ exports.category_update_post = [
 
 //Se encarga de mostrar datos de categoria al intentar borrarla
 exports.category_delete_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar mostrado interfaz para borrar categoria");
+  const [category, categoryProducts] = await Promise.all([
+    Category.findById(req.params.id),
+    Product.find({ category: req.params.id }).sort({ name: 1 }).exec(),
+  ]);
+
+  if (category === null) {
+    const err = new Error("No se encontro la categoria especificada");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("category_delete", {
+    title: "Eliminar categoria",
+    category,
+    products: categoryProducts,
+    errors: {},
+  });
 });
 
 //Se encarga de manejar la solicitud de borrar una categoria
-exports.category_delete_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud de borrar categoria");
-});
+exports.category_delete_post = [
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe colocar el nombre de la cuenta de administracion")
+    .escape(),
+  body("password")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe colocar la contraseña")
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const admin = new Admin({
+      name: req.body.name,
+      password: req.body.password,
+    });
+    const [category, categoryProducts] = await Promise.all([
+      Category.findById(req.params.id),
+      Product.find({ category: req.params.id }).sort({ name: 1 }).exec(),
+    ]);
+
+    if (!errors.isEmpty()) {
+      res.render("category_delete", {
+        title: "Eliminar categoria",
+        admin,
+        errors: errors.mapped(),
+        category,
+        products: categoryProducts,
+      });
+    } else {
+      const adminExists = await Admin.findOne({
+        name: req.body.name,
+        password: req.body.password,
+      }).exec();
+      if (!adminExists) {
+        res.render("category_delete", {
+          title: "Eliminar categoria",
+          admin,
+          errors,
+          category,
+          products: categoryProducts,
+          validation: false,
+        });
+      } else {
+        await Promise.all([
+          Category.findByIdAndDelete(req.params.id),
+          Product.deleteMany({ category: req.params.id }),
+          Pedido.deleteMany({ product: req.params.id }),
+        ]);
+
+        res.redirect("/catalog/categories");
+      }
+    }
+  }),
+];
