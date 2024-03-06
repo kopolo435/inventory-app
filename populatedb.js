@@ -80,10 +80,10 @@ async function productCreate(index, name, category, summary, price, stock) {
   console.log(`Added pedido: ${name} ${index}`);
 }
 
-async function userCreate(index, first_name, family_name, cellphone, email) {
+async function userCreate(index, first_name, last_name, cellphone, email) {
   const user = new User({
     first_name: first_name,
-    family_name: family_name,
+    last_name: last_name,
     cellphone: cellphone,
     email: email,
   });
