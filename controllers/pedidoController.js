@@ -3,6 +3,7 @@ const { body, validationResult, matchedData } = require("express-validator");
 const Pedido = require("../models/pedido");
 const Product = require("../models/product");
 const User = require("../models/user");
+const Admin = require("../models/admin");
 
 //Muestra lista de todos los pedidos en base a filtros
 exports.pedido_list = asyncHandler(async (req, res, next) => {
@@ -145,12 +146,71 @@ exports.pedido_update_post = [
 
 //Maneja solicitud get para eliminar pedido
 exports.pedido_delete_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud get para eliminar pedido");
+  const pedido = await Pedido.findById(req.params.id)
+    .populate("product")
+    .populate("user")
+    .exec();
+
+  if (pedido === null) {
+    const err = new Error("No se encontro el pedido indicado");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("pedido_delete", { title: "Eliminar pedido", pedido, errors: {} });
 });
 
 //Maneja solicitud post para eliminar pedido
-exports.pedido_delete_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud post para eliminar pedido");
-});
+exports.pedido_delete_post = [
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el nombre de usuario")
+    .escape(),
+  body("password")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar la contraseña"),
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const admin = new Admin({
+      name: req.body.name,
+      password: req.body.password,
+    });
+
+    if (!errors.isEmpty()) {
+      const pedido = await Pedido.findById(req.params.id)
+        .populate("product")
+        .populate("user")
+        .exec();
+      res.render("pedido_delete", {
+        title: "Borrar pedido",
+        pedido,
+        admin,
+        errors: errors.mapped(),
+      });
+    } else {
+      const adminExists = await Admin.findOne({
+        name: req.body.name,
+        password: req.body.password,
+      }).exec();
+      if (!adminExists) {
+        const pedido = await Pedido.findById(req.params.id)
+          .populate("product")
+          .populate("user")
+          .exec();
+        res.render("pedido_delete", {
+          title: "Borrar pedido",
+          pedido,
+          admin,
+          errors: errors.mapped(),
+          validation: false,
+        });
+      } else {
+        await Pedido.findByIdAndDelete(req.params.id).exec();
+        res.redirect("/management/orders/");
+      }
+    }
+  }),
+];
