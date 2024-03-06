@@ -2,6 +2,8 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult, matchedData } = require("express-validator");
 const Product = require("../models/product");
 const Category = require("../models/category");
+const Pedido = require("../models/pedido");
+const Admin = require("../models/admin");
 
 //Muestra lista de productos filtrados segun parametros
 exports.product_list = asyncHandler(async (req, res, next) => {
@@ -190,10 +192,78 @@ exports.product_update_post = [
 
 //Maneja solicitud get de eliminar producto
 exports.product_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("Sin implementar interfaz de eliminar producto");
+  const [product, productPedidos] = await Promise.all([
+    Product.findById(req.params.id).populate("category"),
+    Pedido.find({ product: req.params.id }).populate("user"),
+  ]);
+
+  if (product === null) {
+    const err = new Error("No se encontro el producto indicado");
+    err.status = 404;
+    return next(err);
+  }
+
+  res.render("product_delete", {
+    title: "Eliminar producto",
+    product,
+    productPedidos,
+    errors: {},
+  });
 });
 
 //Maneja solicitud post de eliminar producto
-exports.product_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("Sin implementar manejo de solicitud de eliminar producto");
-});
+exports.product_delete_post = [
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe colocar el nombre de la cuenta de administracion")
+    .escape(),
+  body("password")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe colocar la contraseña")
+    .escape(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const admin = new Admin({
+      name: req.body.name,
+      password: req.body.password,
+    });
+    const [product, productPedidos] = await Promise.all([
+      Product.findById(req.params.id).populate("category"),
+      Pedido.find({ product: req.params.id }).populate("user"),
+    ]);
+    if (!errors.isEmpty()) {
+      res.render("product_delete", {
+        title: "Eliminar Producto",
+        product,
+        productPedidos,
+        admin,
+        errors: errors.mapped(),
+      });
+    } else {
+      const adminExists = await Admin.findOne({
+        name: req.body.name,
+        password: req.body.password,
+      }).exec();
+      if (!adminExists) {
+        res.render("product_delete", {
+          title: "Eliminar Producto",
+          product,
+          productPedidos,
+          admin,
+          errors: errors.mapped(),
+          validation: false,
+        });
+      } else {
+        await Promise.all([
+          Product.findByIdAndDelete(req.params.id),
+          Pedido.deleteMany({ product: req.params.id }),
+        ]);
+
+        res.redirect("/catalog/products");
+      }
+    }
+  }),
+];
