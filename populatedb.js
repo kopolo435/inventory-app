@@ -11,6 +11,7 @@ const Category = require("./models/category");
 const Pedido = require("./models/pedido");
 const Product = require("./models/product");
 const User = require("./models/user");
+const Admin = require("./models/admin");
 
 const categories = [];
 const pedidos = [];
@@ -32,8 +33,18 @@ async function main() {
   await createUsers();
   await createProducts();
   await createPedidos();
+  await createAdminUser();
   console.log("Debug: Closing mongoose");
   mongoose.connection.close();
+}
+
+async function createAdminUser() {
+  const admin = new Admin({
+    name: "admin",
+    password: "12345",
+  });
+  await admin.save();
+  console.log(`${admin.name} added`);
 }
 
 // We pass the index to the ...Create functions so that, for example,
