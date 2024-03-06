@@ -18,7 +18,7 @@ pedidoSchema.virtual("inputDate").get(function () {
 });
 
 pedidoSchema.virtual("formattedDate").get(function () {
-  return DateTime.fromJSDate(this.orderPlaced).toLocaleString(
+  return DateTime.fromJSDate(this.orderPlaced, { zone: "utc" }).toLocaleString(
     DateTime.DATE_MED
   );
 });

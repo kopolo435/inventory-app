@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult, matchedData } = require("express-validator");
 const User = require("../models/user");
 const Pedido = require("../models/pedido");
+const Admin = require("../models/admin");
 
 //Muestra lista de usuarios
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -165,12 +166,78 @@ exports.user_update_post = [
 
 //Maneja solicitud get para eliminar usuario
 exports.user_delete_get = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud get para actualizar usuarios");
+  const [user, userPedidos] = await Promise.all([
+    User.findById(req.params.id).exec(),
+    Pedido.find({ user: req.params.id }).populate("product").sort({ _id: 1 }),
+  ]);
+
+  if (user === null) {
+    const err = new Error("No se encontro el usuario indicado");
+    err.status = 404;
+    return next(err);
+  }
+  res.render("user_delete", {
+    title: "Eliminar usuario",
+    user,
+    pedidos: userPedidos,
+    errors: {},
+  });
 });
 
 //Maneja solicitud post para eliminar usuario
-exports.user_delete_post = asyncHandler(async (req, res, next) => {
-  //TODO
-  res.send("Sin implementar manejo de solicitud post para eliminar usuario");
-});
+exports.user_delete_post = [
+  body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar el nombre de la cuenta de administracion"),
+  body("password")
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage("Debe ingresar la contraseña"),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+    const [user, userPedidos] = await Promise.all([
+      User.findById(req.params.id).exec(),
+      Pedido.find({ user: req.params.id }).populate("product").sort({ _id: 1 }),
+    ]);
+
+    const admin = new Admin({
+      name: req.body.name,
+      password: req.body.password,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("user_delete", {
+        title: "Eliminar Usuario",
+        user,
+        pedidos: userPedidos,
+        admin,
+        errors: errors.mapped(),
+      });
+    } else {
+      const adminExists = await Admin.findOne({
+        name: req.body.name,
+        password: req.body.password,
+      }).exec();
+      if (!adminExists) {
+        //Validation failed
+        res.render("user_delete", {
+          title: "Eliminar usuario",
+          user,
+          pedidos: userPedidos,
+          admin,
+          errors: errors.mapped(),
+          validation: false,
+        });
+      } else {
+        //Validation was succesful
+        await Promise.all([
+          User.findByIdAndDelete(req.params.id),
+          Pedido.deleteMany({ user: req.params.id }),
+        ]);
+        res.redirect("/management/users");
+      }
+    }
+  }),
+];

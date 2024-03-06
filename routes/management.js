@@ -49,10 +49,10 @@ router.get("/user/:id/update", user_controller.user_update_get);
 router.post("/user/:id/update", user_controller.user_update_post);
 
 //GET request to delete a user
-router.get("/user/:id/delete", user_controller.user_update_get);
+router.get("/user/:id/delete", user_controller.user_delete_get);
 
 //POST request to delete a user
-router.post("/user/:id/delete", user_controller.user_update_post);
+router.post("/user/:id/delete", user_controller.user_delete_post);
 
 //GET request to show user details
 router.get("/user/:id", user_controller.user_details);
