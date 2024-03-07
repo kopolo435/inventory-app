@@ -2,14 +2,20 @@
 <html lang="en">
   <%- include('head_layout', {title: title}); %>
   <body>
-    <h1><%= title %></h1>
+    <header class="container d-flex justify-content-center my-4">
+      <h1><%= title %></h1>
+    </header>
 
-    <div class="categoriesContainer">
-      <ul>
-        <% categories.forEach(category => { %>
-        <li><a href="<%= category.url %>"><%= category.name %></a></li>
-        <% }) %>
-      </ul>
-    </div>
+    <main class="d-flex justify-content-center">
+      <div class="categoriesContainer">
+        <ul class="list-group">
+          <% categories.forEach(category => { %>
+          <li class="list-group-item list-group-item-action">
+            <a href="<%= category.url %>"><%= category.name %></a>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+    </main>
   </body>
 </html>
