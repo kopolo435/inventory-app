@@ -11,7 +11,7 @@
           <input type="text" class="form-control" name="name" id="name"
           placeholder="Camisas" minlength="3" value="<%= typeof category !==
           "undefined" ? category.name : "" %>">
-          <label for="floatingInput">Email address</label>
+          <label for="floatingInput">Nombre de categoria</label>
           <% if (typeof errors !== "undefined" ) { %>
           <p class="errorText text-danger"><%= errors.name.msg %></p>
           <% } %>
