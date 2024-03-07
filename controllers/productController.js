@@ -48,7 +48,11 @@ exports.product_detail = asyncHandler(async (req, res, next) => {
 //Muestra form para crear un nuevo producto
 exports.product_create_get = asyncHandler(async (req, res, next) => {
   const categories = await Category.find().sort({ name: 1 }).exec();
-  res.render("product_form", { title: "Crear producto", categories });
+  res.render("product_form", {
+    title: "Crear producto",
+    categories,
+    errors: {},
+  });
 });
 
 //Maneja solicitud post de creacion de un producto
@@ -127,6 +131,7 @@ exports.product_update_get = asyncHandler(async (req, res, next) => {
     title: "Actualizar producto",
     product,
     categories,
+    errors: {},
   });
 });
 

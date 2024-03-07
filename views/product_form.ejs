@@ -2,74 +2,76 @@
 <html lang="en">
   <%- include("head_layout",{title:title}) %>
   <body>
-    <h1><%= title %></h1>
-    <form action="" method="post">
-      <div class="textInput">
-        <label for="name">
-          Nombre del producto <input type="text" minlength="1" value="<%= typeof
-          product !== "undefined" ? product.name : "" %>" name="name" id="name"
-          placeholder="Pantalon azul" />
-        </label>
-        <% if (typeof errors !== "undefined" && errors.name) { %>
-        <p class="errorText"><%= errors.name.msg %></p>
-        <% } %>
-      </div>
-      <div class="textInput">
-        <label for="summary">
-          Descripcion <input type="text" minlength="1" value="<%= typeof product
-          !== "undefined" ? product.summary : ""%>" name="summary" id="summary"
-          placeholder="Pantalon azul de distinstas dimensiones" />
-        </label>
-        <% if (typeof errors !== "undefined" && typeof errors.summary !==
-        "undefined") { %>
-        <p class="errorText"><%= errors.summary.msg %></p>
-        <% } %>
-      </div>
-      <div class="textInput">
-        <label for="price">
-          Precio <input type="number" value= "<%= typeof product !== "undefined"
-          ? product.price : ""%>" name="price" placeholder="0" min="0"
-          id="price" step="0.50" />
-        </label>
-        <% if (typeof errors !== "undefined" && typeof errors.price !==
-        "undefined" ) { %>
-        <p class="errorText"><%= errors.price.msg %></p>
-        <% } %>
-      </div>
-      <div class="textInput">
-        <label for="stock">
-          Cantidad en inventario <input type="number" value ="<%= typeof product
-          !== "undefined" ? product.stock : ""%>" name="stock" placeholder="0"
-          id="stock" min="0" step="1" />
-        </label>
-        <% if (typeof errors !== "undefined" && typeof errors.summary !==
-        "undefined") { %>
-        <p class="errorText"><%= errors.stock.msg %></p>
-        <% } %>
-      </div>
-      <div class="selectInput">
-        <label for="category">
-          Categoria
-          <select name="category" id="category">
-            <% categories.forEach(category => { %> <% if (typeof product !==
-            "undefined" && typeof product.category !== "undefined" &&
-            product.category === category._id.toString()) { %>
-            <option value="<%= category._id.toString()%>" selected>
-              <%= category.name %>
-            </option>
-            <% }else { %>
-            <option value="<%= category._id.toString()%>" selected>
-              <%= category.name %>
-            </option>
-            <%}%> <% }) %>
-          </select>
-        </label>
-        <% if (typeof errors !== "undefined"&& typeof errors.category !==
-        "undefined") { %>
-        <p class="errorText"><%= errors.category.msg %></p>
-        <% } %>
-      </div>
-      <button type="submit">Guardar</button>
-    </form>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="px-2 row justify-content-center">
+      <form
+        action=""
+        method="post"
+        class="d-flex flex-column align-items-center mt-3 gap-3"
+      >
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" name="name" id="name"
+          placeholder="Pantalon azul" value="<%= typeof product !== "undefined"
+          ? product.name : "" %>">
+          <label for="name">Nombre del producto: </label>
+          <% if (typeof errors.name !== "undefined" ) { %>
+          <p class="errorText text-danger"><%= errors.name.msg %></p>
+          <% } %>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" name="summary" id="summary"
+          placeholder="Pantalon azul" value="<%= typeof product !== "undefined"
+          ? product.summary : "" %>">
+          <label for="summary">Nombre del producto: </label>
+          <% if (typeof errors.summary !== "undefined" ) { %>
+          <p class="errorText text-danger"><%= errors.summary.msg %></p>
+          <% } %>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" name="price" id="price"
+          placeholder="0" min="0" step="0.50" value="<%= typeof product !==
+          "undefined" ? product.price : "" %>">
+          <label for="price">Nombre del producto: </label>
+          <% if (typeof errors.price !== "undefined" ) { %>
+          <p class="errorText text-danger"><%= errors.price.msg %></p>
+          <% } %>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" name="stock" id="stock"
+          placeholder="0" min="0" step="1" value="<%= typeof product !==
+          "undefined" ? product.stock : "" %>">
+          <label for="stock">Nombre del producto: </label>
+          <% if (typeof errors.stock !== "undefined" ) { %>
+          <p class="errorText text-danger"><%= errors.stock.msg %></p>
+          <% } %>
+        </div>
+        <div class="selectInput">
+          <label for="category">
+            Categoria
+            <select name="category" id="category">
+              <% categories.forEach(category => { %> <% if (typeof product !==
+              "undefined" && typeof product.category !== "undefined" &&
+              product.category === category._id.toString()) { %>
+              <option value="<%= category._id.toString()%>" selected>
+                <%= category.name %>
+              </option>
+              <% }else { %>
+              <option value="<%= category._id.toString()%>" selected>
+                <%= category.name %>
+              </option>
+              <%}%> <% }) %>
+            </select>
+          </label>
+          <% if (typeof errors !== "undefined"&& typeof errors.category !==
+          "undefined") { %>
+          <p class="errorText"><%= errors.category.msg %></p>
+          <% } %>
+        </div>
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </form>
+    </main>
   </body>
 </html>
