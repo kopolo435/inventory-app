@@ -2,17 +2,28 @@
 <html lang="en">
   <%- include("head_layout") %>
   <body>
-    <h1>Detalles de pedido: <%= pedido._id %></h1>
-    <p>
-      Producto:
-      <a href="<%= pedido.product.url %>"><%= pedido.product.name %></a>
-    </p>
-    <p>Unidades solicitadas: <%= pedido.ammount %></p>
-    <p>Solicitado el <%= pedido.formattedDate %></p>
-    <p>Usuario: <%= pedido.user.fullname %></p>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1>Detalles de pedido: <%= pedido._id %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="px-4 row row-cols-1 row-cols-sm-2 justify-content-center">
+      <div class="details">
+        <p>
+          Producto:
+          <a href="<%= pedido.product.url %>"><%= pedido.product.name %></a>
+        </p>
+        <p>Unidades solicitadas: <%= pedido.ammount %></p>
+        <p>Solicitado el <%= pedido.formattedDate %></p>
+        <p>Usuario: <%= pedido.user.fullname %></p>
+      </div>
+      <div class="options">
+        <a class="btn btn-primary" href="<%= pedido.url %>/update"
+          >Actualizar Pedido</a
+        >
+        <a class="btn btn-danger" href="<%= pedido.url %>/delete"
+          >Eliminar Pedido</a
+        >
+      </div>
+    </main>
   </body>
-  <div class="options">
-    <a href="<%= pedido.url %>/update">Actualizar Pedido</a>
-    <a href="<%= pedido.url %>/delete">Eliminar Pedido</a>
-  </div>
 </html>
