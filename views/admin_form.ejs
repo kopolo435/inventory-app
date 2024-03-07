@@ -1,0 +1,33 @@
+<div class="adminContainer col">
+  <p>
+    Necesita ingresar los datos de adminsitrador para poder realizar esta acción
+  </p>
+  <form
+    action=""
+    method="post"
+    class="d-flex flex-column align-items-center mt-3"
+  >
+    <div class="textInput form-floating mb-3">
+      <input type="text" class="form-control" name="name" id="name"
+      placeholder="admin" minlength="3" value="<%= typeof admin !== "undefined"
+      ? admin.name : "" %>">
+      <label for="name">Nombre cuenta</label>
+      <% if (typeof errors.name !== "undefined" ) { %>
+      <p class="errorText text-danger"><%= errors.name.msg %></p>
+      <% } %>
+    </div>
+    <div class="textInput form-floating mb-3">
+      <input type="text" class="form-control" name="password" id="password"
+      placeholder="123456789" minlength="3" value="<%= typeof admin !==
+      "undefined" ? admin.name : "" %>">
+      <label for="password">Password</label>
+      <% if (typeof errors.password !== "undefined" ) { %>
+      <p class="errorText text-danger"><%= errors.password.msg %></p>
+      <% } %>
+    </div>
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+  </form>
+  <% if (typeof validation !== "undefined") { %>
+  <p>Error, los datos no coinciden con una cuenta administrativa</p>
+  <% } %>
+</div>

@@ -2,43 +2,26 @@
 <html lang="en">
   <%- include("head_layout",{title}) %>
   <body>
-    <h1><%= title %></h1>
-    <p>De verdad desea eliminar esta categoria?</p>
-    <p>
-      Se eliminaran los siguientes productos y los pedidos relacionados con
-      ellos
-    </p>
-    <% if (products.length >0) { %> <% products.forEach(product => { %>
-    <p><%= product.name %></p>
-    <% }) %> <% }else{ %>
-    <p>No hay productos en esta categoria</p>
-    <% } %>
-    <div class="adminContainer">
-      <form action="" method="post">
-        <div class="textInput">
-          <label for="name">
-            Nombre de cuenta administrador <input type="text" name="name"
-            id="name" value="<%= typeof admin !== "undefined" ? admin.name : ""
-            %>" />
-          </label>
-          <% if (typeof errors.name !== "undefined") { %>
-          <p class="textError"><%= errors.name.msg %></p>
-          <% } %>
-        </div>
-        <div class="textInput">
-          <label for="password">
-            Password <input type="password" name="password" id="password"
-            value="<%= typeof admin !== "undefined" ? admin.password : "" %>" />
-          </label>
-          <% if (typeof errors.password !== "undefined") { %>
-          <p class="textError"><%= errors.password.msg %></p>
-          <% } %>
-        </div>
-        <button type="submit">Eliminar Categoria</button>
-      </form>
-      <% if (typeof validation !== "undefined") { %>
-      <p>Error, los datos no coinciden con una cuenta administrativa</p>
-      <% } %>
-    </div>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="row row-cols-1 row-cols-sm-2 w-100 px-5">
+      <div class="col">
+        <p>De verdad desea eliminar esta categoria?</p>
+        <p>
+          Se eliminaran los siguientes productos y los pedidos relacionados con
+          ellos
+        </p>
+        <% if (products.length >0) { %> <% products.forEach(product => { %>
+        <p><%= product.name %></p>
+        <% }) %> <% }else{ %>
+        <p>No hay productos en esta categoria</p>
+        <% } %>
+      </div>
+      <% if (typeof admin !== "undefined") { %> <%-
+      include("admin_form",{admin,errors}) %> <% }else{ %> <%-
+      include("admin_form",{errors}) %> <% } %>
+    </main>
   </body>
 </html>
