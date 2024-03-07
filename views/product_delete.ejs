@@ -2,53 +2,36 @@
 <html lang="en">
   <%- include("head_layout",{title}) %>
   <body>
-    <h1><%= title %></h1>
-    <p><%= product.name %></p>
-    <p><%= product.summary %></p>
-    <p>Precio por unidad de $<%= product.price %></p>
-    <p>En inventario <%= product.stock %> disponibles</p>
-    <p>Categoria: <%= product.category.name %></p>
-
-    <hr />
-    <p>Si elimina este producto se eliminaran los siguientes pedidos</p>
-    <% if (productPedidos.length > 0) { %>
-    <ul>
-      <% productPedidos.forEach(element => { %>
-      <li>
-        <p>Id de Pedido: <%= element._id %></p>
-        <p>Hecho por: <%= element.user.fullname %></p>
-      </li>
-      <% }) %>
-    </ul>
-    <% } else { %>
-    <p>No se han realizado pedidos con este producto</p>
-    <% } %>
-    <div class="adminContainer">
-      <form action="" method="post">
-        <div class="textInput">
-          <label for="name">
-            Nombre de cuenta administrador <input type="text" name="name"
-            id="name" value="<%= typeof admin !== "undefined" ? admin.name : ""
-            %>" />
-          </label>
-          <% if (typeof errors.name !== "undefined") { %>
-          <p class="textError"><%= errors.name.msg %></p>
-          <% } %>
-        </div>
-        <div class="textInput">
-          <label for="password">
-            Password <input type="password" name="password" id="password"
-            value="<%= typeof admin !== "undefined" ? admin.password : "" %>" />
-          </label>
-          <% if (typeof errors.password !== "undefined") { %>
-          <p class="textError"><%= errors.password.msg %></p>
-          <% } %>
-        </div>
-        <button type="submit">Eliminar Usuario</button>
-      </form>
-      <% if (typeof validation !== "undefined") { %>
-      <p>Error, los datos no coinciden con una cuenta administrativa</p>
-      <% } %>
-    </div>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="row row-cols-1 row-cols-sm-2 w-100 px-5 py-4">
+      <div class="col">
+        <h2>Datos:</h2>
+        <p><%= product.name %></p>
+        <p><%= product.summary %></p>
+        <p>Precio por unidad de $<%= product.price %></p>
+        <p>En inventario <%= product.stock %> disponibles</p>
+        <p>Categoria: <%= product.category.name %></p>
+        <hr />
+        <p>Si elimina este producto se eliminaran los siguientes pedidos</p>
+        <% if (productPedidos.length > 0) { %>
+        <ul class="list-group d-flex gap-3">
+          <% productPedidos.forEach(element => { %>
+          <li class="list-group-item list-group-item-action">
+            <p>Id de Pedido: <%= element._id %></p>
+            <a href="<%= element.user.url %>"><%= element.user.fullname %></a>
+          </li>
+          <% }) %>
+        </ul>
+        <% } else { %>
+        <p>No se han realizado pedidos con este producto</p>
+        <% } %>
+      </div>
+      <% if (typeof admin !== "undefined") { %> <%-
+      include("admin_form",{admin,errors}) %> <% }else{ %> <%-
+      include("admin_form",{errors}) %> <% } %>
+    </main>
   </body>
 </html>
