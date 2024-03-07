@@ -2,8 +2,9 @@
 <html lang="en">
   <%- include('head_layout', {title: title}); %>
   <body>
-    <header class="container d-flex justify-content-center my-4">
+    <header class="container my-1 d-flex flex-column align-items-center">
       <h1><%= title %></h1>
+      <%- include("nav") %>
     </header>
 
     <main class="d-flex flex-column align-items-center">
