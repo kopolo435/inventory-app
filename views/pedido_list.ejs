@@ -2,20 +2,33 @@
 <html lang="en">
   <%- include("head_layout",{title}) %>
   <body>
-    <h1><%= title %></h1>
-    <ul>
-      <% allPedidos.forEach(pedido => { %>
-      <li>
-        <p><%= pedido.product.name %></p>
-        <p><%= pedido.ammount %> unidades solicitadas</p>
-        <% if (pedido.orderPlaced) { %>
-        <p>Agregado el <%= pedido.orderPlaced %></p>
-        <% }else{ %>
-        <p>Sin fecha de agregado</p>
-        <% } %>
-        <a href="<%= pedido.url %>">Ver detalles</a>
-      </li>
-      <% }) %>
-    </ul>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="d-flex flex-column align-items-center py-4">
+      <div class="categoriesContainer mb-4">
+        <ul class="list-group d-flex flex-column gap-3">
+          <% allPedidos.forEach(pedido => { %>
+          <li class="list-group-item list-group-item-action">
+            <p><%= pedido.product.name %></p>
+            <p><%= pedido.ammount %> unidades solicitadas</p>
+            <% if (pedido.orderPlaced) { %>
+            <p>Agregado el <%= pedido.orderPlaced %></p>
+            <% }else{ %>
+            <p>Sin fecha de agregado</p>
+            <% } %>
+            <a href="<%= pedido.url %>">Ver detalles</a>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div>
+        <p>Para agregar un pedido hacer click en este boton:</p>
+        <a class="btn btn-primary" href="management/pedido/create"
+          >Agregar pedido</a
+        >
+      </div>
+    </main>
   </body>
 </html>
