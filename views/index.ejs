@@ -1,11 +1,62 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
+  <%- include("head_layout",{title:"Inicio"}) %>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <header class="container d-flex justify-content-center my-4">
+      <h1>Bienvenido a inventario</h1>
+    </header>
+    <main class="container">
+      <div class="row row-cols-1 row-cols-sm-2 gx-5 gy-5 d-flex">
+        <div class="col">
+          <div class="card mw-80">
+            <img src="..." class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">Categorias</h5>
+              <p class="card-text">Revisa nuestras categorias</p>
+              <a href="/catalog/categories" class="btn btn-primary"
+                >Ver categorias</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mw-80">
+            <img src="..." class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">Productos</h5>
+              <p class="card-text">Revisa nuestros productos.</p>
+              <a href="/catalog/products" class="btn btn-primary"
+                >Ver productos</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mw-80">
+            <img src="..." class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">Pedidos</h5>
+              <p class="card-text">Revisar pedidos realizados.</p>
+              <a href="/management/orders" class="btn btn-primary"
+                >Ver Pedidos</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card mw-80">
+            <img src="..." class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">Usuarios</h5>
+              <p class="card-text">Revisar usuarios.</p>
+              <a href="/management/users" class="btn btn-primary"
+                >Ver usuarios</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer></footer>
   </body>
 </html>
