@@ -2,19 +2,30 @@
 <html lang="en">
   <%- include("head_layout",{title:title}) %>
   <body>
-    <h1><%= category.name %></h1>
-    <h2>Productos en esta categoria</h2>
-    <ul>
-      <% categoryProducts.forEach(product => { %>
-      <li>
-        <a href="<%= product.url %>"><%= product.name%></a>
-        <p><%= product.summary %></p>
-      </li>
-      <% }) %>
-    </ul>
-    <div class="options">
-      <a href="<%= category.url %>/update">Actualizar categoria</a>
-      <a href="<%= category.url %>/delete">Eliminar categoria</a>
-    </div>
+    <header class="container my-2 d-flex justify-content-center">
+      <h1>Categoria <%= category.name %></h1>
+    </header>
+    <main class="px-4 row row-cols-1 row-cols-sm-2 justify-content-center">
+      <div class="products">
+        <h2 class="">Productos en esta categoria</h2>
+        <ul class="list-group">
+          <% categoryProducts.forEach(product => { %>
+          <li class="list-group-item list-group-item-action">
+            <a href="<%= product.url %>"><%= product.name%></a>
+            <p><%= product.summary %></p>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+      <div class="options">
+        <h2>Opciones de categoria</h2>
+        <a class="btn btn-primary" href="<%= category.url %>/update"
+          >Actualizar categoria</a
+        >
+        <a class="btn btn-danger" href="<%= category.url %>/delete"
+          >Eliminar categoria</a
+        >
+      </div>
+    </main>
   </body>
 </html>
