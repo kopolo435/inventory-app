@@ -1,9 +1,23 @@
 const asyncHandler = require("express-async-handler");
 const { body, validationResult, matchedData } = require("express-validator");
+const multer = require("multer");
 const Product = require("../models/product");
 const Category = require("../models/category");
 const Pedido = require("../models/pedido");
 const Admin = require("../models/admin");
+const path = require("path");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/images");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ".png");
+  },
+});
+
+const upload = multer({ storage: storage });
 
 //Muestra lista de productos filtrados segun parametros
 exports.product_list = asyncHandler(async (req, res, next) => {
@@ -57,6 +71,7 @@ exports.product_create_get = asyncHandler(async (req, res, next) => {
 
 //Maneja solicitud post de creacion de un producto
 exports.product_create_post = [
+  upload.single("img"),
   body("name")
     .trim()
     .isLength({ min: 1 })
@@ -89,6 +104,7 @@ exports.product_create_post = [
       category: req.body.category,
       price: req.body.price,
       stock: req.body.stock,
+      img: `/${path.relative("public", req.file.path)}`,
     });
 
     if (!errors.isEmpty()) {
@@ -137,6 +153,7 @@ exports.product_update_get = asyncHandler(async (req, res, next) => {
 
 //Maneja solicitud post de actualizar producto
 exports.product_update_post = [
+  upload.single("img"),
   body("name")
     .trim()
     .isLength({ min: 1 })
@@ -162,6 +179,12 @@ exports.product_update_post = [
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
+    const oldProduct = await Product.findById(req.params.id).exec();
+    let imgPath = oldProduct.img;
+
+    if (req.file) {
+      imgPath = `/${path.relative("public", req.file.path)}`;
+    }
 
     const product = new Product({
       _id: req.params.id,
@@ -170,6 +193,7 @@ exports.product_update_post = [
       category: req.body.category,
       price: req.body.price,
       stock: req.body.stock,
+      img: imgPath,
     });
 
     if (!errors.isEmpty()) {

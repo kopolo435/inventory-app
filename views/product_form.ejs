@@ -73,8 +73,8 @@
         </div>
         <div class="uploadInput">
           <label for="img">
-            Imagen del producto
-            <input type="file" name="img" id="img" />
+            Imagen del producto <input type="file" name="img" id="img"
+            value="<%= typeof product !== "undefined" ? product.img : "" %>" />
           </label>
         </div>
         <button type="submit" class="btn btn-success">Guardar</button>

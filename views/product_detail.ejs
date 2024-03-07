@@ -7,6 +7,9 @@
       <%- include("nav") %>
     </header>
     <main class="d-flex flex-column align-items-center">
+      <% if (typeof product.img !== "undefined") { %>
+      <img src="<%= product.img %> " alt="" width="100px" height="auto" />
+      <% } %>
       <p><%= product.summary %></p>
       <p>Precio por unidad de $<%= product.price %></p>
       <p>En inventario <%= product.stock %> disponibles</p>
