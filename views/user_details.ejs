@@ -2,34 +2,47 @@
 <html lang="en">
   <%- include("head_layout",{title}) %>
   <body>
-    <h1><%= title %></h1>
-    <p><%= user.fullname %></p>
-    <p><%= user.cellphone %></p>
-    <p><%= user.email %></p>
-    <div class="options">
-      <a href="<%= user.url %>/update">Actualizar Usuario</a>
-      <a href="<%= user.url %>/delete">Eliminar Usuario</a>
-    </div>
-
-    <hr />
-    <h2>Pedidos del usuario</h2>
-    <% if (userPedidos.length>0) { %>
-    <ul>
-      <% userPedidos.forEach(pedido => { %>
-      <li>
-        <p><%= pedido.product.name %></p>
-        <p><%= pedido.ammount %> unidades solicitadas</p>
-        <% if (pedido.orderPlaced) { %>
-        <p>Agregado el <%= pedido.orderPlaced %></p>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="row row-cols-1 row-cols-sm-2 w-100 px-5 py-4">
+      <div class="col">
+        <h2>Datos del usuario</h2>
+        <p><%= user.fullname %></p>
+        <p><%= user.cellphone %></p>
+        <p><%= user.email %></p>
+        <div class="options">
+          <a class="btn btn-primary" href="<%= user.url %>/update"
+            >Actualizar Usuario</a
+          >
+          <a class="btn btn-danger" href="<%= user.url %>/delete"
+            >Eliminar Usuario</a
+          >
+        </div>
+        <hr />
+      </div>
+      <div class="col">
+        <h2>Pedidos del usuario</h2>
+        <% if (userPedidos.length>0) { %>
+        <ul class="list-group d-flex gap-3">
+          <% userPedidos.forEach(pedido => { %>
+          <li class="list-group-item list-group-item-action">
+            <p><%= pedido.product.name %></p>
+            <p><%= pedido.ammount %> unidades solicitadas</p>
+            <% if (pedido.orderPlaced) { %>
+            <p>Agregado el <%= pedido.orderPlaced %></p>
+            <% }else{ %>
+            <p>Sin fecha de agregado</p>
+            <% } %>
+            <a href="<%= pedido.url %>">Ver detalles</a>
+            <% }); %>
+          </li>
+        </ul>
         <% }else{ %>
-        <p>Sin fecha de agregado</p>
+        <p>Este usuario no ha hecho pedidos</p>
         <% } %>
-        <a href="<%= pedido.url %>">Ver detalles</a>
-        <% }); %>
-      </li>
-    </ul>
-    <% }else{ %>
-    <p>Este usuario no ha hecho pedidos</p>
-    <% } %>
+      </div>
+    </main>
   </body>
 </html>
