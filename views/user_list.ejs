@@ -2,15 +2,26 @@
 <html lang="en">
   <%- include("head_layout",{title}) %>
   <body>
-    <h1><%= title %></h1>
-    <p>Lista de usuarios:</p>
-    <ul>
-      <% allUsers.forEach(user => { %>
-      <li>
-        <a href="<%= user.url %>"><%= user.fullname %></a>
-        <p><%= user.cellphone %></p>
-      </li>
-      <% }) %>
-    </ul>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="d-flex flex-column align-items-center py-4">
+      <h2>Lista de usuarios:</h2>
+      <ul class="list-group d-flex gap-3">
+        <% allUsers.forEach(user => { %>
+        <li class="list-group-item list-group-item-action">
+          <a href="<%= user.url %>"><%= user.fullname %></a>
+          <p><%= user.cellphone %></p>
+        </li>
+        <% }) %>
+      </ul>
+      <div>
+        <p>Desea crear un nuevo usuario, haga click en este link</p>
+        <a class="btn btn-primary" href="/management/user/create"
+          >Crear usuario</a
+        >
+      </div>
+    </main>
   </body>
 </html>
