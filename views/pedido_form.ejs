@@ -2,39 +2,48 @@
 <html lang="en">
   <%- include("head_layout",{title}) %>
   <body>
-    <h1><%= title %></h1>
-    <p>
-      Producto: <%= typeof product !== "undefined" ? product.name :
-      pedido.product.name %>
-    </p>
-    <form action="" method="post">
-      <input type="hidden" name="productId" value="<%= typeof product !==
-      "undefined" ? product._id : pedido.product._id %>" />
-      <div class="selectInput">
-        <label for="user">
-          Usuario
-          <select name="user" id="user">
-            <% users.forEach(user => { %> <% if (typeof pedido.user !==
-            "undefined" && user._id.toString() === pedido.user._id.toString()) {
-            %>
-            <option value="<%= user._id %>" selected>
-              <%= user.fullname %>
-            </option>
-            <% }else{ %>
-            <option value="<%= user._id %>"><%= user.fullname %></option>
-            <% } %> <% }); %>
-          </select>
-        </label>
-      </div>
-      <div class="textInput">
-        <label for="ammount">
-          Cantidad: <input type="number" name="ammount" id="ammount" value="<%=
-          typeof pedido !== "undefined" ? pedido.ammount : "" %>"
-          placeholder="0" min="1" step="1" />
-        </label>
-        <% if (typeof errors.ammount !== "undefined") { %>
-        <p class="errorText"><%=errors.ammount.msg%></p>
-        <% } %>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %>: <%= pedido._id %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="px-4 row justify-content-center">
+      <h2>
+        Producto: <%= typeof product !== "undefined" ? product.name :
+        pedido.product.name %>
+      </h2>
+      <form
+        action=""
+        method="post"
+        method="post"
+        class="d-flex flex-column align-items-center mt-3 gap-3"
+      >
+        <input type="hidden" name="productId" value="<%= typeof product !==
+        "undefined" ? product._id : pedido.product._id %>" />
+        <div class="selectInput">
+          <label for="user">
+            Usuario
+            <select name="user" id="user">
+              <% users.forEach(user => { %> <% if (typeof pedido.user !==
+              "undefined" && user._id.toString() === pedido.user._id.toString())
+              { %>
+              <option value="<%= user._id %>" selected>
+                <%= user.fullname %>
+              </option>
+              <% }else{ %>
+              <option value="<%= user._id %>"><%= user.fullname %></option>
+              <% } %> <% }); %>
+            </select>
+          </label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" name="ammount" id="ammount"
+          placeholder="0" min="1" step="1" value="<%= typeof pedido !==
+          "undefined" ? pedido.ammount : "" %>">
+          <label for="floatingInput">Cantidad: </label>
+          <% if (typeof errors.ammount !== "undefined" ) { %>
+          <p class="errorText text-danger"><%= errors.ammount.msg %></p>
+          <% } %>
+        </div>
         <div class="dateInput">
           <label for="orderPlaced">
             Fecha de pedido <input type="date" name="orderPlaced"
@@ -45,8 +54,8 @@
           <p class="errorText"><%=errors.orderPlaced.msg%></p>
           <% } %>
         </div>
-      </div>
-      <button type="submit">Guardar</button>
-    </form>
+        <button type="submit" class="btn btn-success">Guardar</button>
+      </form>
+    </main>
   </body>
 </html>
