@@ -2,29 +2,48 @@
 <html lang="en">
   <%- include("head_layout",{title}) %>
   <body>
-    <h1><%= title %></h1>
-    <form action="" method="get">
-      <% categories.forEach(category => { %>
-      <label for="<%= category.name %>">
-        <%= category.name %>
-        <input
-          type="checkbox"
-          name="categoriesFilter[]"
-          value="<%= category._id %>"
-        />
-      </label>
-      <% }) %>
-      <button type="submit">Filtrar</button>
-    </form>
-    <p>Lista de productos:</p>
-    <ul>
-      <% allProducts.forEach(product => { %>
-      <li>
-        <a href="<%= product.url %>"><%= product.name%></a>
-        <p><%= product.summary %></p>
-        <p><%= product.category.name %></p>
-      </li>
-      <% }) %>
-    </ul>
+    <header class="container my-1 d-flex flex-column align-items-center">
+      <h1><%= title %></h1>
+      <%- include("nav") %>
+    </header>
+    <main class="row row-cols-1 row-cols-sm-2 w-100 px-5 py-4">
+      <div class="col mb-4" style="max-width: 200px">
+        <form
+          action=""
+          method="get"
+          class="d-flex flex-column gap-1 align-items-start"
+        >
+          <h4>Filtros</h4>
+          <% categories.forEach(category => { %>
+          <label for="<%= category.name %>">
+            <input
+              type="checkbox"
+              name="categoriesFilter[]"
+              value="<%= category._id %>"
+            />
+            <%= category.name %>
+          </label>
+          <% }) %>
+          <button type="submit" class="btn btn-primary">Filtrar</button>
+        </form>
+      </div>
+      <div class="col">
+        <p>Lista de productos:</p>
+        <ul class="list-group d-flex gap-3">
+          <% allProducts.forEach(product => { %>
+          <li class="list-group-item list-group-item-action">
+            <a href="<%= product.url %>"><%= product.name%></a>
+            <p><%= product.summary %></p>
+            <span>
+              Categoria:
+              <a href="<%= product.category.url %>"
+                ><%= product.category.name %></a
+              >
+            </span>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+    </main>
   </body>
 </html>
