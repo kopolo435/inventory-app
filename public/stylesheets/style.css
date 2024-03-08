@@ -2,5 +2,35 @@
 .navigation ul{
   display: flex;
   list-style: none;
-  gap: 10px;
+  gap: 20px;
+  background-color: #b460bd;
+  padding:10px 20px;
+  width: 100vw;
+}
+
+.navigation a{
+  text-decoration:underline;
+  font-weight: 600;
+  color: #2c182f;
+}
+
+.navigation li{
+  transition: transform 0.5s ease-in-out;
+}
+.navigation li:hover{
+  transform: scale(110%);
+}
+header{
+  width: 100vw;
+  background-color: #f7defa;  
+  color: #171717;
+}
+
+main{
+  background-color: #f7defa;
+  padding: 20px !important;
+}
+
+body{
+  background-color: #f7defa;
 }
