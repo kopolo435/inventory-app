@@ -19,7 +19,7 @@
         <% if (productPedidos.length > 0) { %>
         <ul class="list-group d-flex gap-3">
           <% productPedidos.forEach(element => { %>
-          <li class="list-group-item list-group-item-action">
+          <li class="listItem list-group-item list-group-item-action">
             <p>Id de Pedido: <%= element._id %></p>
             <a href="<%= element.user.url %>"><%= element.user.fullname %></a>
           </li>

@@ -53,3 +53,15 @@ main{
 body{
   background-color: #f7defa;
 }
+
+.card{
+  background-color: #fdf8fe;
+  color: #5a305e;
+  box-shadow: 0px 8px 5px -7px rgba(64,64,64,0.57);
+  -webkit-box-shadow: 0px 8px 5px -7px rgba(64,64,64,0.57);
+  -moz-box-shadow: 0px 8px 5px -7px rgba(64,64,64,0.57);
+}
+
+.card h5{
+  font-weight: 600;
+}
