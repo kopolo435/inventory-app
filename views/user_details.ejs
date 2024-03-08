@@ -27,7 +27,7 @@
         <% if (userPedidos.length>0) { %>
         <ul class="list-group d-flex gap-3">
           <% userPedidos.forEach(pedido => { %>
-          <li class="list-group-item list-group-item-action">
+          <li class="listItem list-group-item list-group-item-action">
             <p><%= pedido.product.name %></p>
             <p><%= pedido.ammount %> unidades solicitadas</p>
             <% if (pedido.orderPlaced) { %>

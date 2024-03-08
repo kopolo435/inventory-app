@@ -10,7 +10,7 @@
       <h2>Lista de usuarios:</h2>
       <ul class="list-group d-flex flex-row gap-3 my-2">
         <% allUsers.forEach(user => { %>
-        <li class="list-group-item list-group-item-action">
+        <li class="listItem list-group-item list-group-item-action">
           <a href="<%= user.url %>"><%= user.fullname %></a>
           <p><%= user.cellphone %></p>
         </li>
