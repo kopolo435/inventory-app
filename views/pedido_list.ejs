@@ -14,7 +14,7 @@
             <p><%= pedido.product.name %></p>
             <p><%= pedido.ammount %> unidades solicitadas</p>
             <% if (pedido.orderPlaced) { %>
-            <p>Agregado el <%= pedido.orderPlaced %></p>
+            <p>Agregado el <%= pedido.formattedDate %></p>
             <% }else{ %>
             <p>Sin fecha de agregado</p>
             <% } %>
